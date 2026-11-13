@@ -1,0 +1,112 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
+[ext_resource type="PackedScene" path="res://scenes/excavator.tscn" id="2_excavator"]
+[ext_resource type="Script" path="res://scripts/terrain.gd" id="3_terrain"]
+[ext_resource type="Script" path="res://scripts/orbit_camera.gd" id="4_orbit"]
+[ext_resource type="Script" path="res://scripts/hud.gd" id="5_hud"]
+[ext_resource type="Script" path="res://scripts/free_camera.gd" id="6_free"]
+[ext_resource type="Script" path="res://scripts/site_lighting.gd" id="7_lighting"]
+[ext_resource type="Script" path="res://scripts/soil_params.gd" id="8_soil"]
+[ext_resource type="Resource" path="res://data/common_earth.tres" id="9_earth"]
+[ext_resource type="Resource" path="res://data/clay.tres" id="10_clay"]
+[ext_resource type="Resource" path="res://data/sand.tres" id="11_sand"]
+[ext_resource type="Script" path="res://scripts/dump_truck.gd" id="12_truck"]
+[ext_resource type="Resource" path="res://data/man_tgs_8x4_tipper.tres" id="13_truck_params"]
+[ext_resource type="Script" path="res://scripts/trench_exercise.gd" id="14_trench"]
+[ext_resource type="Resource" path="res://data/caces_b1_trench.tres" id="15_trench_params"]
+
+[sub_resource type="ProceduralSkyMaterial" id="sky_mat"]
+sky_top_color = Color(0.32, 0.5, 0.78, 1)
+sky_horizon_color = Color(0.72, 0.78, 0.84, 1)
+ground_bottom_color = Color(0.3, 0.26, 0.22, 1)
+ground_horizon_color = Color(0.72, 0.78, 0.84, 1)
+
+[sub_resource type="Sky" id="sky"]
+sky_material = SubResource("sky_mat")
+
+[sub_resource type="Environment" id="env"]
+background_mode = 2
+sky = SubResource("sky")
+ambient_light_source = 3
+tonemap_mode = 4
+ssao_enabled = true
+fog_enabled = true
+fog_light_color = Color(0.7, 0.75, 0.8, 1)
+fog_density = 0.0008
+
+[sub_resource type="StandardMaterial3D" id="stake_mat"]
+albedo_color = Color(0.95, 0.35, 0.05, 1)
+
+[sub_resource type="BoxMesh" id="stake_mesh"]
+material = SubResource("stake_mat")
+size = Vector3(0.08, 1.2, 0.08)
+
+[node name="Main" type="Node3D"]
+script = ExtResource("1_main")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866025, -0.383022, 0.321394, 0, 0.642788, 0.766044, -0.5, -0.663414, 0.556670, 0, 20, 0)
+light_energy = 1.2
+shadow_enabled = true
+directional_shadow_max_distance = 120.0
+
+[node name="Lighting" type="Node" parent="."]
+script = ExtResource("7_lighting")
+sun_path = NodePath("../Sun")
+environment_path = NodePath("../WorldEnvironment")
+
+[node name="Terrain" type="Node3D" parent="."]
+script = ExtResource("3_terrain")
+layout = 2
+materials = Array[ExtResource("8_soil")]([ExtResource("9_earth"), ExtResource("10_clay"), ExtResource("11_sand")])
+cells = 832
+
+[node name="Stakes" type="Node3D" parent="."]
+
+[node name="Stake5m" type="MeshInstance3D" parent="Stakes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0, 0.6, -5)
+mesh = SubResource("stake_mesh")
+
+[node name="Stake10m" type="MeshInstance3D" parent="Stakes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0, 0.6, -10)
+mesh = SubResource("stake_mesh")
+
+[node name="Stake15m" type="MeshInstance3D" parent="Stakes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0, 0.6, -15)
+mesh = SubResource("stake_mesh")
+
+[node name="DumpTruck" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0, -6.5)
+script = ExtResource("12_truck")
+params = ExtResource("13_truck_params")
+terrain_path = NodePath("../Terrain")
+
+[node name="Excavator" parent="." instance=ExtResource("2_excavator")]
+terrain_path = NodePath("../Terrain")
+
+[node name="TrenchExercise" type="Node" parent="."]
+script = ExtResource("14_trench")
+params = ExtResource("15_trench_params")
+excavator_path = NodePath("../Excavator")
+
+[node name="OrbitCamera" type="Camera3D" parent="."]
+far = 2000.0
+fov = 60.0
+script = ExtResource("4_orbit")
+target_path = NodePath("../Excavator")
+
+[node name="FreeCamera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 6, 12)
+far = 2000.0
+fov = 60.0
+script = ExtResource("6_free")
+terrain_path = NodePath("../Terrain")
+
+[node name="Hud" type="CanvasLayer" parent="."]
+script = ExtResource("5_hud")
+excavator_path = NodePath("../Excavator")
+truck_path = NodePath("../DumpTruck")

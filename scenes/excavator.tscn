@@ -1,0 +1,47 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/excavator.gd" id="1_excavator"]
+[ext_resource type="Resource" path="res://data/cat320.tres" id="2_params"]
+[ext_resource type="Script" path="res://scripts/cab_camera.gd" id="3_cab"]
+[ext_resource type="Script" path="res://scripts/excavator_audio.gd" id="4_audio"]
+[ext_resource type="AudioStream" path="res://audio/engine_start.wav" id="5_start"]
+[ext_resource type="AudioStream" path="res://audio/engine_idle.wav" id="6_idle"]
+[ext_resource type="AudioStream" path="res://audio/engine_high.wav" id="7_high"]
+[ext_resource type="AudioStream" path="res://audio/hydraulic_flow.wav" id="8_flow"]
+[ext_resource type="AudioStream" path="res://audio/hydraulic_cylinder.wav" id="9_cylinder"]
+[ext_resource type="AudioStream" path="res://audio/hydraulic_relief.wav" id="10_relief"]
+[ext_resource type="AudioStream" path="res://audio/swing.wav" id="11_swing"]
+
+[node name="Excavator" type="Node3D"]
+script = ExtResource("1_excavator")
+params = ExtResource("2_params")
+
+[node name="Audio" type="Node" parent="."]
+script = ExtResource("4_audio")
+engine_start = ExtResource("5_start")
+engine_idle = ExtResource("6_idle")
+engine_high = ExtResource("7_high")
+hydraulic_flow = ExtResource("8_flow")
+hydraulic_cylinder = ExtResource("9_cylinder")
+hydraulic_relief = ExtResource("10_relief")
+swing_motor = ExtResource("11_swing")
+
+[node name="Undercarriage" type="Node3D" parent="."]
+
+[node name="Turret" type="Node3D" parent="Undercarriage"]
+
+[node name="Cab" type="Node3D" parent="Undercarriage/Turret"]
+
+[node name="Head" type="Node3D" parent="Undercarriage/Turret"]
+script = ExtResource("3_cab")
+
+[node name="Camera3D" type="Camera3D" parent="Undercarriage/Turret/Head"]
+near = 0.03
+far = 2000.0
+fov = 80.0
+
+[node name="Boom" type="Node3D" parent="Undercarriage/Turret"]
+
+[node name="Stick" type="Node3D" parent="Undercarriage/Turret/Boom"]
+
+[node name="Bucket" type="Node3D" parent="Undercarriage/Turret/Boom/Stick"]

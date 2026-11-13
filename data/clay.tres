@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="SoilParams" format=3]
+
+[ext_resource type="Script" path="res://scripts/soil_params.gd" id="1_soil"]
+
+[resource]
+script = ExtResource("1_soil")
+display_name = "argile"
+bank_density = 2020.0
+loose_density = 1660.0
+repose_angle_deg = 35.0
+cutting_resistance = 96.0
+passive_pressure = 90.0
+bearing_capacity = 313.0
+overburden_factor = 1.0
+loose_resistance_ratio = 0.1
+plate_friction_deg = 10.0
+ground_color = Color(0.56, 0.39, 0.25, 1)
+dug_color = Color(0.5, 0.33, 0.21, 1)
+loose_color = Color(0.44, 0.28, 0.17, 1)
+grain_scale = 0.35

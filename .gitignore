@@ -1,0 +1,15 @@
+# Godot 4+ specific ignores
+.godot/
+*.tmp
+
+# Raw third-party assets: large, and the CAT model carries Caterpillar trademarks
+*.zip
+/raw/
+*.blend
+*.blend1
+
+# Editor/tooling
+.claude/
+
+# Godot AI plugin self-update backups
+addons/.godot_ai_update/
