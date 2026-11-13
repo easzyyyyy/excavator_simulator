@@ -29,7 +29,7 @@ To run the tests from the command line:
 godot --headless --path . --script res://tests/run_tests.gd
 ```
 
-Sound effects are not included in this repository, so the project runs silently until you add your own files at the paths referenced in `scenes/excavator.tscn`.
+Sound effects are not included in this repository, so the project runs silently. To add sound, assign your own audio streams to the exported fields of the `Audio` node in `scenes/excavator.tscn`.
 
 ## Credits and licenses
 
